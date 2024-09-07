@@ -3,3 +3,4 @@ rich
 sqlalchemy
 requests
 fuzzywuzzy
+python-levenshtein

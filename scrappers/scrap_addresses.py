@@ -40,7 +40,7 @@ def insert_address_to_db(conn, fid, address):
 
 def main():
     try:
-        for fid in range(1, 100001):
+        for fid in range(31000, 100001):
             addresses = scrape_addresses(fid)
 
             if addresses:
