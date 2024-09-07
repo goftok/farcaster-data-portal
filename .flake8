@@ -1,0 +1,15 @@
+[flake8]
+max-line-length = 120
+exclude =
+    .tox,
+    .git,
+    .env
+    .pytest_cache
+    **/__init__.py,
+    **/__pycache__,
+    data/
+    logs/
+    models/
+    node_modules/
+extend-ignore =
+    E501
