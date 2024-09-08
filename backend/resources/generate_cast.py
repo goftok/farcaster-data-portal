@@ -7,8 +7,8 @@ from transformers import T5ForConditionalGeneration, T5Tokenizer
 from transformers_models.generate_cast.predict import predict_cast
 from backend.env_links import MODEL_PATH
 
-# model = T5ForConditionalGeneration.from_pretrained(MODEL_PATH)
-# tokenizer = T5Tokenizer.from_pretrained(MODEL_PATH, legacy=False)
+model = T5ForConditionalGeneration.from_pretrained(MODEL_PATH)
+tokenizer = T5Tokenizer.from_pretrained(MODEL_PATH, legacy=False)
 max_length = 250
 
 
@@ -20,7 +20,7 @@ class GenerateCast(Resource):
             if "keywords" not in data or not isinstance(data["keywords"], str):
                 raise BadRequest("Invalid 'keywords' key or value in request body.")
 
-            return {"error": "Model is not hosted nad and there is no endpoint  for the model."}, 500
+            # return {"error": "Model is not hosted nad and there is no endpoint  for the model."}, 500
 
             predicted_cast = predict_cast(data["keywords"], model, tokenizer, max_length)
             return jsonify({"predicted_cast": predicted_cast})
