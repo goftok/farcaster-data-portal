@@ -1,0 +1,52 @@
+tags:
+  - CheckCopywriting
+summary: Check cast text for copyright issues.
+description: Takes in cast text and checks whether it is copyrighted.
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    description: The cast text to be checked.
+    required: true
+    schema:
+      type: object
+      properties:
+        cast_text:
+          type: string
+          example: "This is a cast that needs to be checked for copyright issues."
+responses:
+  200:
+    description: Successful copyright check.
+    schema:
+      type: object
+      properties:
+        casts:
+          type: array
+          items:
+            type: string
+        casts_count:
+          type: integer
+      example:
+        casts: ["This is a copyrighted cast", "Another copyrighted cast"]
+        casts_count: 2
+  400:
+    description: Invalid input. Missing or invalid `cast_text`.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+      example:
+        error: "Invalid 'cast_text' key or value in request body."
+  500:
+    description: Internal server error.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+      example:
+        error: "An error occurred while translating: Internal server error."

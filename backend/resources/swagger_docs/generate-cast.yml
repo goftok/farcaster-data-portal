@@ -1,0 +1,47 @@
+tags:
+  - GenerateCast
+summary: Generate a cast based on provided keywords.
+description: Takes in a string of keywords and returns a generated cast using the model.
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    description: The keywords to generate the cast from.
+    required: true
+    schema:
+      type: object
+      properties:
+        keywords:
+          type: string
+          example: "machine learning, NLP, transformers"
+responses:
+  200:
+    description: Successfully generated the cast based on the provided keywords.
+    schema:
+      type: object
+      properties:
+        predicted_cast:
+          type: string
+      example:
+        predicted_cast: "Transformers have revolutionized the field of NLP and machine learning."
+  400:
+    description: Invalid input. The 'keywords' field is missing or not a string.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+      example:
+        error: "Invalid 'keywords' key or value in request body."
+  500:
+    description: Internal server error.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+      example:
+        error: "An error occurred while generating cast: Internal server error."

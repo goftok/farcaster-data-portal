@@ -8,3 +8,14 @@ transformers
 scikit-learn
 torch
 pandas
+python-dotenv
+wandb
+accelerate
+keybert
+openpyxl
+sentencepiece
+art
+flask
+flask_restful
+flask_cors
+flasgger
