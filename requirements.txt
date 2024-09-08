@@ -19,3 +19,4 @@ flask
 flask_restful
 flask_cors
 flasgger
+web3

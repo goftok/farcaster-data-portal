@@ -163,5 +163,5 @@ cython_debug/
 
 models/
 models_cast/
-v2/
+v3/
 wandb/

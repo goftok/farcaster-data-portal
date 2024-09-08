@@ -10,10 +10,9 @@ from backend.resources.home_page import HomePage
 from backend.resources.healthy_check import HealthyCheck
 from backend.resources.check_copywriting import CheckCopywriting
 from backend.resources.generate_cast import GenerateCast
+from backend.env_links import MODEL_PATH
 
 console = Console()
-
-MODEL_PATH = "/home/ubuntu/hackathon6/transformers_models/models_cast/checkpoint-1690"
 
 
 def print_config():

@@ -10,7 +10,7 @@ from utils.console import console
 model_name = "google/flan-t5-base"
 dataset_path = "/home/ubuntu/hackathon6/data/100k_filtered_casts_and_keywords.xlsx"
 output_dir = "/home/ubuntu/hackathon6/transformers_models/models_cast"
-max_length = 250
+max_length = 300
 
 model = T5ForConditionalGeneration.from_pretrained(model_name)
 tokenizer = T5Tokenizer.from_pretrained(model_name, legacy=False)
@@ -99,7 +99,7 @@ training_args = Seq2SeqTrainingArguments(
     output_dir=output_dir,
     eval_strategy="epoch",
     save_strategy="epoch",
-    learning_rate=5e-5,
+    learning_rate=9e-5,
     fp16=False,
     per_device_train_batch_size=8,
     per_device_eval_batch_size=16,
