@@ -9,14 +9,14 @@ produces:
 parameters:
   - in: body
     name: body
-    description: The keywords to generate the cast from.
+    description: The keywords to generate the cast from. SHOULD BE SEPARATED WITH COMMA.
     required: true
     schema:
       type: object
       properties:
         keywords:
           type: string
-          example: "machine learning, NLP, transformers"
+          example: "warpcast, tokens"
 responses:
   200:
     description: Successfully generated the cast based on the provided keywords.

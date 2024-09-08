@@ -1,0 +1,52 @@
+tags:
+  - GetMostWarpsTipped
+summary: Get the top 5 casts with the most warps tipped.
+description: Returns the top 5 casts ordered by the number of warps tipped.
+responses:
+  200:
+    description: A list of the top 5 most warps tipped casts.
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          author_fid:
+            type: integer
+            description: The FID of the author of the cast.
+            example: 12345
+          text:
+            type: string
+            description: The content of the cast.
+            example: "This is a sample cast text."
+          warpsTipped:
+            type: integer
+            description: Number of warps tipped.
+            example: 50
+          viewcount:
+            type: integer
+            description: The number of views for the cast.
+            example: 1000
+          reactions:
+            type: integer
+            description: The number of reactions to the cast.
+            example: 25
+          replies:
+            type: integer
+            description: The number of replies to the cast.
+            example: 10
+  400:
+    description: Bad Request, missing or invalid input.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid input data"
+  500:
+    description: Internal server error.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "An error occurred while processing the request"

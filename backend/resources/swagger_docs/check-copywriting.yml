@@ -16,7 +16,7 @@ parameters:
       properties:
         cast_text:
           type: string
-          example: "This is a cast that needs to be checked for copyright issues."
+          example: "gm"
 responses:
   200:
     description: Successful copyright check.

@@ -18,7 +18,7 @@ if web3.is_connected():
 
 
 # Function to resolve ENS associated with a public address and update the DB
-def get_ens_for_address(conn, address):
+def get_ens_for_address(address):
     try:
         # Use the ENS module from web3 to resolve ENS associated with the address
         ens_name = web3.ens.name(address)
@@ -80,7 +80,7 @@ def main():
                     continue
                 if idx % 1000 == 0:
                     print(f"Processing address {idx + 1} of {len(addresses)}")
-                is_ens = get_ens_for_address(conn, address)
+                is_ens = get_ens_for_address(address)
                 update_is_ens_in_db(conn, address, is_ens)
                 # print(f"Inserted address for FID {fid}: {address}")
         else:

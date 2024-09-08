@@ -7,7 +7,7 @@ from transformers import Seq2SeqTrainer, Seq2SeqTrainingArguments
 from sklearn.model_selection import train_test_split
 from utils.console import console
 
-model_name = "google/flan-t5-base"
+model_name = "/home/ubuntu/hackathon6/transformers_models/v3/checkpoint-4548"
 dataset_path = "/home/ubuntu/hackathon6/data/100k_filtered_casts_and_keywords.xlsx"
 output_dir = "/home/ubuntu/hackathon6/transformers_models/models_cast"
 max_length = 300
@@ -101,9 +101,8 @@ training_args = Seq2SeqTrainingArguments(
     save_strategy="epoch",
     learning_rate=9e-5,
     fp16=False,
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=16,
-    weight_decay=0.01,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=8,
     save_total_limit=2,
     num_train_epochs=10,
     predict_with_generate=True,

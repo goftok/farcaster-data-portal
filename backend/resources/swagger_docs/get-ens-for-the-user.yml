@@ -1,0 +1,57 @@
+tags:
+  - GetEnsForTheUser
+summary: Fetch ENS names based on username.
+description: >
+  This API takes a username and returns a list of ENS names associated
+  with the Ethereum addresses linked to that username. If no username
+  or addresses exist, appropriate messages are returned.
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    description: JSON payload with the username to query ENS names.
+    required: true
+    schema:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "jacob"
+responses:
+  200:
+    description: A list of ENS names associated with the addresses.
+    schema:
+      type: object
+      properties:
+        ens:
+          type: array
+          items:
+            type: string
+          example: ["example.eth", "another.eth", "No ENS found"]
+  400:
+    description: Bad Request - Invalid or missing username.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid or missing 'username' in request body."
+  404:
+    description: Username or addresses not found.
+    schema:
+      type: object
+      properties:
+        ens:
+          type: string
+          example: "No scrapped username found for this user."
+  500:
+    description: Internal Server Error - Any unexpected error.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "An error occurred while processing the request."

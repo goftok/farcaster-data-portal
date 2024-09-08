@@ -4,7 +4,7 @@ from flasgger import swag_from
 
 
 class HomePage(Resource):
-    @swag_from("./swagger_docs/home.yml")
+    @swag_from("./swagger_docs/home-page.yml")
     def get(self):
         html = """
         <h1>Hi, welcome to the Farcaster Data Portal!</h1>
