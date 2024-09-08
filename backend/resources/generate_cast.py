@@ -7,8 +7,8 @@ from transformers import T5ForConditionalGeneration, T5Tokenizer
 from transformers_models.generate_cast.predict import predict_cast
 from backend.env_links import MODEL_PATH
 
-model = T5ForConditionalGeneration.from_pretrained(MODEL_PATH)
-tokenizer = T5Tokenizer.from_pretrained(MODEL_PATH, legacy=False)
+# model = T5ForConditionalGeneration.from_pretrained(MODEL_PATH)
+# tokenizer = T5Tokenizer.from_pretrained(MODEL_PATH, legacy=False)
 max_length = 250
 
 
