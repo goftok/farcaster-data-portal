@@ -4,3 +4,7 @@ sqlalchemy
 requests
 fuzzywuzzy
 python-levenshtein
+transformers
+scikit-learn
+torch
+pandas

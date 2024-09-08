@@ -49,14 +49,15 @@ def insert_cast_to_db(conn, fid, cast_data):
 
 def main():
     try:
-        for fid in range(1, 100001):
+        for fid in range(4600, 100001):
             casts = scrape_casts(fid)
 
             if casts:
                 for cast in casts:
                     insert_cast_to_db(conn, fid, cast)
             else:
-                print(f"No casts found for FID {fid}")
+                # print(f"No casts found for FID {fid}")
+                pass
 
             if fid % 1000 == 0:
                 print(f"Scraped {fid} profiles.")

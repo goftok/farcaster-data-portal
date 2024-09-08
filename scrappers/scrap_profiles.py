@@ -51,7 +51,7 @@ def insert_profile_to_db(conn, profile):
 
 def main():
     try:
-        for fid in range(1, 100001):
+        for fid in range(44000, 100001):
             profile = scrape_profile(fid)
 
             if profile:
