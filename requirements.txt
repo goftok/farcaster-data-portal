@@ -6,9 +6,6 @@ fuzzywuzzy
 python-levenshtein
 pandas
 python-dotenv
-wandb
-accelerate
-keybert
 openpyxl
 sentencepiece
 art
