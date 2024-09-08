@@ -1,7 +1,7 @@
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
 
-def predict_cast(keywords: str, model: T5ForConditionalGeneration, tokenizer: T5Tokenizer):
+def predict_cast(keywords: str, model: T5ForConditionalGeneration, tokenizer: T5Tokenizer, max_length: int):
     # Tokenize the input keywords
     inputs = tokenizer(
         keywords, max_length=max_length, truncation=True, padding="max_length", return_tensors="pt"
@@ -23,5 +23,5 @@ if __name__ == "__main__":
     max_length = 300
     while True:
         keywords = input("Enter keywords: ")
-        predicted_cast = predict_cast(keywords, model, tokenizer)
+        predicted_cast = predict_cast(keywords, model, tokenizer, max_length)
         print(predicted_cast)

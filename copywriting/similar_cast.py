@@ -34,4 +34,4 @@ def find_similar_casts(conn, cast_text_to_check):
 
         # Sort by similarity score and return top 5
         similar_casts = sorted(similar_casts, key=lambda x: x[1], reverse=True)[:5]
-        return [cast[0] for cast in similar_casts]
+        return [cast[0] for cast in similar_casts], len(similar_casts)

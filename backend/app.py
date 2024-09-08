@@ -9,6 +9,7 @@ from flasgger import Swagger
 from backend.resources.home_page import HomePage
 from backend.resources.healthy_check import HealthyCheck
 from backend.resources.check_copywriting import CheckCopywriting
+from backend.resources.generate_cast import GenerateCast
 
 console = Console()
 
@@ -49,6 +50,7 @@ def create_app():
     api.add_resource(HomePage, "/")
     api.add_resource(HealthyCheck, "/health-check")
     api.add_resource(CheckCopywriting, "/check-copywriting")
+    api.add_resource(GenerateCast, "/generate-cast")
 
     return app
 
