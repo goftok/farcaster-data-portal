@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import request
 from flask_restful import Resource
 from flasgger import swag_from
 from werkzeug.exceptions import BadRequest

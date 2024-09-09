@@ -1,5 +1,6 @@
 import os
 import psycopg2
+import psycopg2.pool
 import subprocess
 from dotenv import load_dotenv
 
@@ -14,14 +15,46 @@ POSTGRES_PORT = os.getenv("POSTGRES_PORT")
 if not all([POSTGRES_USERNAME, POSTGRES_PASSWORD, POSTGRES_HOSTNAME, POSTGRES_DATABASE_NAME, POSTGRES_PORT]):
     raise ValueError("Please make sure to set the environment variables for the database connection")
 
-# Connect to the database
-conn = psycopg2.connect(
-    dbname=POSTGRES_DATABASE_NAME,
-    user=POSTGRES_USERNAME,
-    password=POSTGRES_PASSWORD,
-    host=POSTGRES_HOSTNAME,
-    port=POSTGRES_PORT,
-)
+
+# Setup connection pool
+try:
+    connection_pool = psycopg2.pool.SimpleConnectionPool(
+        minconn=1,
+        maxconn=10,
+        user=POSTGRES_USERNAME,
+        password=POSTGRES_PASSWORD,
+        host=POSTGRES_HOSTNAME,
+        port=POSTGRES_PORT,
+        database=POSTGRES_DATABASE_NAME,
+    )
+    if connection_pool:
+        print("Connection pool created successfully")
+except Exception as e:
+    print(f"Error creating connection pool: {e}")
+    raise
+
+
+def get_connection():
+    try:
+        return connection_pool.getconn()
+    except Exception as e:
+        print(f"Failed to get connection from pool: {e}")
+        raise
+
+
+def release_connection(conn):
+    try:
+        connection_pool.putconn(conn)
+    except Exception as e:
+        print(f"Failed to release connection: {e}")
+        raise
+
+
+def close_all_connections():
+    try:
+        connection_pool.closeall()
+    except Exception as e:
+        print(f"Failed to close all connections: {e}")
 
 
 def backup_postgres_db(output_path) -> str:

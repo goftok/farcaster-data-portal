@@ -1,4 +1,5 @@
-from flask import jsonify, request
+import json
+from flask import request
 from flask_restful import Resource
 from flasgger import swag_from
 from werkzeug.exceptions import BadRequest
@@ -16,9 +17,8 @@ class CheckCopywriting(Resource):
                 raise BadRequest("Invalid 'cast_text' key or value in request body.")
 
             casts, casts_count = check_cast_for_copyright(data["cast_text"])
-            return jsonify({"casts": casts, "casts_count": casts_count})
+            # we should use json.dumps because casts contain datetime objects
+            return {"casts": json.dumps(casts, default=str), "casts_count": casts_count}, 200
 
-        except BadRequest as e:
-            return {"error": str(e)}, 400
         except Exception as e:
             return {"error": f"An error occurred while checking copywriting: {e}"}, 500

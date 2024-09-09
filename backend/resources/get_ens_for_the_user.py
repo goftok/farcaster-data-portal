@@ -1,13 +1,13 @@
 import os
 from dotenv import load_dotenv
-from flask import jsonify, request
+from flask import request
 from flask_restful import Resource
 from flasgger import swag_from
 from werkzeug.exceptions import BadRequest
 from web3 import Web3
 
 from psycopg2 import sql
-from db_connection import conn
+from db_connection import get_connection, release_connection
 
 load_dotenv()
 
@@ -19,6 +19,7 @@ web3 = Web3(Web3.HTTPProvider(infura_url))
 class GetEnsForTheUser(Resource):
     @swag_from("./swagger_docs/get-ens-for-the-user.yml")
     def post(self):
+        conn = get_connection()
         try:
             data = request.get_json()
 
@@ -55,6 +56,9 @@ class GetEnsForTheUser(Resource):
                 return {"ens": ens_names}, 200  # Return a 200 status code with the response
 
         except BadRequest as e:
-            return jsonify({"error": str(e)}), 400
+            return {"error": str(e)}, 400
         except Exception as e:
-            return jsonify({"error": f"An error occurred: {e}"}), 500
+            return {"error": f"An error occurred: {e}"}, 500
+        finally:
+            # Release the connection back to the pool after using it
+            release_connection(conn)
