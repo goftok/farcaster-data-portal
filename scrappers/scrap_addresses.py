@@ -1,10 +1,8 @@
-import requests
 import time
+import requests
 from psycopg2 import sql
-from db_connection import conn
 
 
-# Function to scrape addresses for a specific FID
 def scrape_addresses(fid):
     url = f"https://client.warpcast.com/v2/verifications?fid={fid}"
     response = requests.get(url)
@@ -19,7 +17,6 @@ def scrape_addresses(fid):
     return None
 
 
-# Function to insert address data into PostgreSQL
 def insert_address_to_db(conn, fid, address):
     with conn.cursor() as cur:
         scrapped_timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -36,30 +33,3 @@ def insert_address_to_db(conn, fid, address):
             (fid, address, scrapped_timestamp),
         )
         conn.commit()
-
-
-def main():
-    try:
-        for fid in range(40000, 100001):
-            addresses = scrape_addresses(fid)
-
-            if addresses:
-                for address_data in addresses:
-                    address = address_data.get("address")
-                    if address:
-                        insert_address_to_db(conn, fid, address)
-                        # print(f"Inserted address for FID {fid}: {address}")
-            else:
-                # print(f"No addresses found for FID {fid}")
-                pass
-
-            if fid % 1000 == 0:
-                print(f"Scrapped {fid} profiles.")
-
-            time.sleep(0.01)  # Delay to avoid overwhelming the API
-    finally:
-        conn.close()
-
-
-if __name__ == "__main__":
-    main()

@@ -165,3 +165,4 @@ models/
 models_cast/
 v3/
 wandb/
+scripts/

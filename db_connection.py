@@ -20,7 +20,7 @@ if not all([POSTGRES_USERNAME, POSTGRES_PASSWORD, POSTGRES_HOSTNAME, POSTGRES_DA
 try:
     connection_pool = psycopg2.pool.SimpleConnectionPool(
         minconn=1,
-        maxconn=10,
+        maxconn=50,
         user=POSTGRES_USERNAME,
         password=POSTGRES_PASSWORD,
         host=POSTGRES_HOSTNAME,

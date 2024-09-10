@@ -15,6 +15,7 @@ flask_cors
 flasgger
 web3
 gunicorn
+matplotlib
 
 transformers
 scikit-learn

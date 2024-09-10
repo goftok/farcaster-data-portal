@@ -1,10 +1,8 @@
-import requests
 import time
+import requests
 from psycopg2 import sql
-from db_connection import conn
 
 
-# Function to scrape casts for a specific FID
 def scrape_casts(fid, limit=100):
     url = f"https://client.warpcast.com/v2/profile-casts?fid={fid}&limit={limit}"
     response = requests.get(url)
@@ -19,7 +17,6 @@ def scrape_casts(fid, limit=100):
     return None
 
 
-# Function to insert cast data into PostgreSQL with conflict handling
 def insert_cast_to_db(conn, fid, cast_data):
     with conn.cursor() as cur:
         scrapped_timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -45,27 +42,3 @@ def insert_cast_to_db(conn, fid, cast_data):
             (fid, text, viewCount, combinedRecastCount, reactions, replies, warpsTipped, timestamp, scrapped_timestamp),
         )
         conn.commit()
-
-
-def main():
-    try:
-        for fid in range(4600, 100001):
-            casts = scrape_casts(fid)
-
-            if casts:
-                for cast in casts:
-                    insert_cast_to_db(conn, fid, cast)
-            else:
-                # print(f"No casts found for FID {fid}")
-                pass
-
-            if fid % 1000 == 0:
-                print(f"Scraped {fid} profiles.")
-
-            time.sleep(0.1)  # Delay to avoid overwhelming the API
-    finally:
-        conn.close()
-
-
-if __name__ == "__main__":
-    main()

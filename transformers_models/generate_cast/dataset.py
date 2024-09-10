@@ -24,8 +24,7 @@ def fetch_all_casts(conn):
     # SQL query to fetch all casts from the 'casts' table
     query = """SELECT DISTINCT text
         FROM casts
-        WHERE text IS NOT NULL
-        LIMIT 100000;
+        limit 1000
     """
 
     with conn.cursor() as cur:

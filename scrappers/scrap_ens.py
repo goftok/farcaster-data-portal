@@ -1,14 +1,12 @@
 import os
-import time
-from dotenv import load_dotenv
 from web3 import Web3
 from psycopg2 import sql
-from db_connection import conn
+from dotenv import load_dotenv
 
 load_dotenv()
 
 INFURA_API_KEY = os.getenv("INFURA_API_KEY")
-# Connect to an Ethereum node (using Infura in this case)
+
 infura_url = f"https://mainnet.infura.io/v3/{INFURA_API_KEY}"
 web3 = Web3(Web3.HTTPProvider(infura_url))
 
@@ -52,6 +50,7 @@ def update_is_ens_in_db(conn, address, is_ens):
             conn.commit()
     except Exception as e:
         print(f"Error updating is_ens for address {address}: {e}")
+        conn.rollback()  # Rollback the transaction if an error occurs
 
 
 def get_addresses(conn):
@@ -59,7 +58,8 @@ def get_addresses(conn):
         query = """
             SELECT address
             FROM adresses
-            Order by author_fid asc
+            WHERE author_fid > 2000
+            ORDER BY author_fid ASC
         """
         cur.execute(query)
         results = cur.fetchall()
@@ -67,30 +67,3 @@ def get_addresses(conn):
     addresses = [row[0] for row in results]
 
     return addresses
-
-
-# Main scraping and ENS updating function
-def main():
-    try:
-        addresses = get_addresses(conn)
-
-        if addresses:
-            for idx, address in enumerate(addresses):
-                if address[:2] != "0x":
-                    continue
-                if idx % 1000 == 0:
-                    print(f"Processing address {idx + 1} of {len(addresses)}")
-                is_ens = get_ens_for_address(address)
-                update_is_ens_in_db(conn, address, is_ens)
-                # print(f"Inserted address for FID {fid}: {address}")
-        else:
-            # print(f"No addresses found for FID {fid}")
-            pass
-
-        time.sleep(0.01)  # Delay to avoid overwhelming the API
-    finally:
-        conn.close()
-
-
-if __name__ == "__main__":
-    main()
