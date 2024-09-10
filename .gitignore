@@ -166,3 +166,4 @@ models_cast/
 v3/
 wandb/
 scripts/
+.DS_Store

@@ -21,3 +21,4 @@ transformers
 scikit-learn
 torch
 keybert
+langdetect

@@ -1,18 +1,25 @@
+import os
 import re
 import pandas as pd
 from keybert import KeyBERT
+from langdetect import detect, DetectorFactory
 
-from db_connection import conn
+from db_connection import get_connection, release_connection
+
+dataset_path = os.getenv("DATASET_PATH")
 
 # Initialize KeyBERT model
 kw_model = KeyBERT()
+
+# Set the seed for reproducibility
+DetectorFactory.seed = 0
 
 
 # Function to extract keywords from a text (cast)
 def extract_keywords(cast, top_n=5):
     keywords = kw_model.extract_keywords(
         cast,
-        keyphrase_ngram_range=(1, 2),
+        keyphrase_ngram_range=(1, 1),
         stop_words="english",
         top_n=top_n,
     )
@@ -22,9 +29,10 @@ def extract_keywords(cast, top_n=5):
 # Function to fetch all casts from the PostgreSQL database
 def fetch_all_casts(conn):
     # SQL query to fetch all casts from the 'casts' table
-    query = """SELECT DISTINCT text
+    query = """
+        SELECT DISTINCT text
         FROM casts
-        limit 1000
+        limit 10000
     """
 
     with conn.cursor() as cur:
@@ -53,12 +61,21 @@ def create_excel_with_casts_and_keywords(output_excel_file, conn):
         if idx % 1000 == 0:
             print(f"Processing cast {idx + 1} of {len(casts)}")
 
-        if len(cast) < 20:
+        if len(cast) < 40:
+            continue
+
+        try:
+            # Check if the language of the cast is English
+            if detect(cast) != "en":
+                continue
+        except Exception as e:
+            print(f"Error detecting language: {e}")
             continue
 
         keywords = extract_keywords(cast)  # Extract keywords for each cast
         if len(keywords) == 0:
             continue
+
         keywords_list.append(", ".join(keywords))
         clean_casts.append(cast)
 
@@ -81,10 +98,10 @@ def create_excel_with_casts_and_keywords(output_excel_file, conn):
 if __name__ == "__main__":
 
     # Output Excel file
-    output_excel_file = "/home/ubuntu/hackathon6/data/100k_casts_and_keywords.xlsx"
+    conn = get_connection()
 
     # Create the Excel file with casts and their corresponding keywords
-    create_excel_with_casts_and_keywords(output_excel_file, conn)
+    create_excel_with_casts_and_keywords(dataset_path, conn)
 
     # Close the database connection
-    conn.close()
+    release_connection(conn)
