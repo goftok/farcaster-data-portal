@@ -14,20 +14,20 @@ The **Farcaster Data Portal** is a Flask-based API that provides advanced tools 
 
 ```bash
 backend/
-├── env_links.py             # Environment variables and model paths
-├── models.py                # Database models and structure
+├── env_links.py                 # Environment variables and model paths
+├── models.py                    # Database models and structure
 ├── resources/
-│   ├── home_page.py         # Home page resource
-│   ├── healthy_check.py     # Health check resource
-│   ├── check_copywriting.py # Check copywriting resource
-│   ├── generate_cast.py     # Generate cast resource
+│   ├── home_page.py             # Home page resource
+│   ├── healthy_check.py         # Health check resource
+│   ├── check_copywriting.py     # Check copywriting resource
+│   ├── generate_cast.py         # Generate cast resource
 │   ├── get_most_warps_tipped.py # Get top warps tipped resource
 │   └── get_ens_for_the_user.py  # Get ENS for user resource
 ├── scrappers/
-│   └── scrap_ens.py         # Script for scraping ENS information
-app.py                       # Main application script
-requirements.txt             # Dependencies for the project
-README.md                    # Project documentation
+│   └── scrap_ens.py             # Script for scraping ENS information
+app.py                           # Main application script
+requirements.txt                 # Dependencies for the project
+README.md                        # Project documentation
 ```
 
 ## Installation
@@ -40,7 +40,7 @@ README.md                    # Project documentation
 ```
 
 2. Set up a virtual environment:
-3. 
+
 ```bash
     python3 -m venv venv
     source venv/bin/activate
