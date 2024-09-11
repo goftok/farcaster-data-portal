@@ -12,6 +12,7 @@ The **Farcaster Data Portal** is a Flask-based API that provides advanced tools 
 
 ## Project Structure
 
+```bash
 backend/
 ├── env_links.py             # Environment variables and model paths
 ├── models.py                # Database models and structure
@@ -27,6 +28,7 @@ backend/
 app.py                       # Main application script
 requirements.txt             # Dependencies for the project
 README.md                    # Project documentation
+```
 
 ## Installation
 
@@ -38,6 +40,7 @@ README.md                    # Project documentation
 ```
 
 2. Set up a virtual environment:
+3. 
 ```bash
     python3 -m venv venv
     source venv/bin/activate
@@ -53,7 +56,6 @@ README.md                    # Project documentation
 
 Create a .env file in the root directory with the structure as in the .env.example
 
-
 5. Set up the PostgreSQL database:
 
 Use the models.py file to set up the database structure. Run the SQL commands or use an ORM to create the necessary tables for profiles, addresses, and casts.
@@ -63,4 +65,12 @@ Start the Flask API:
 
 ```bash
     python -m backend.app
-    ```
+```
+
+## Hosting
+
+The application is currently hosted on **Heroku** and can be accessed via the following URL:
+
+[https://farcaster-data-portal-e40fc222318a.herokuapp.com/](https://farcaster-data-portal-e40fc222318a.herokuapp.com/)
+
+Note: The model is not yet deployed
