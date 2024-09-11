@@ -1,24 +1,44 @@
+import os
 import torch
 import random
-import pandas as pd
 import wandb
+import pandas as pd
+from dotenv import load_dotenv
+
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 from transformers import Seq2SeqTrainer, Seq2SeqTrainingArguments
+from transformers import EvalPrediction
 from sklearn.model_selection import train_test_split
 from utils.console import console
+from evaluate import load
 
-model_name = "/home/ubuntu/hackathon6/transformers_models/v3/checkpoint-4548"
-dataset_path = "/home/ubuntu/hackathon6/data/100k_filtered_casts_and_keywords.xlsx"
-output_dir = "/home/ubuntu/hackathon6/transformers_models/models_cast"
-max_length = 300
+load_dotenv()
+
+model_name = "google/flan-t5-base"
+dataset_path = os.getenv("DATASET_PATH")
+output_dir = os.getenv("MODEL_OUTPUT_DIR")
+max_length = 250
+test_size = 0.2
+seed = 14
+
+# Load the BLEU and ROUGE metrics
+bleu_metric = load("bleu")
+rouge_metric = load("rouge")
+
+console.print(f"Dataset path: {dataset_path}")
+console.print(f"Output directory: {output_dir}")
+if not dataset_path or not output_dir or not os.path.exists(dataset_path) or not os.path.exists(output_dir):
+    raise ValueError("Please set the DATASET_PATH and MODEL_OUTPUT_DIR environment variables")
 
 model = T5ForConditionalGeneration.from_pretrained(model_name)
 tokenizer = T5Tokenizer.from_pretrained(model_name, legacy=False)
 
 df = pd.read_excel(dataset_path, engine="openpyxl")
 df = df.dropna()
+# if df.isna().sum().sum() > 0:
+#     raise ValueError("Dataset contains missing values")
 
-train_df, eval_df = train_test_split(df, test_size=0.3, random_state=42)
+train_df, eval_df = train_test_split(df, test_size=test_size, random_state=seed)
 
 
 # Function to tokenize the dataset
@@ -95,17 +115,45 @@ console.print("\n Evaluation dataset length:")
 console.print(len(eval_dataset))
 
 
+def compute_metrics(pred: EvalPrediction):
+    # Decode generated predictions and reference labels
+    labels_ids = pred.label_ids
+    pred_ids = pred.predictions
+
+    # Replace padding token ids (-100) with the pad token for labels
+    pred_str = tokenizer.batch_decode(pred_ids, skip_special_tokens=True)
+    labels_ids[labels_ids == -100] = tokenizer.pad_token_id
+    label_str = tokenizer.batch_decode(labels_ids, skip_special_tokens=True)
+
+    # Compute BLEU score
+    bleu = bleu_metric.compute(predictions=[pred_str], references=[label_str])
+
+    # Compute ROUGE score
+    rouge = rouge_metric.compute(predictions=pred_str, references=label_str, use_stemmer=True)
+
+    # Return the BLEU and ROUGE metrics
+    return {
+        "bleu": bleu["bleu"],
+        "rouge1": rouge["rouge1"].mid.fmeasure,
+        "rouge2": rouge["rouge2"].mid.fmeasure,
+        "rougeL": rouge["rougeL"].mid.fmeasure,
+    }
+
+
 training_args = Seq2SeqTrainingArguments(
     output_dir=output_dir,
     eval_strategy="epoch",
     save_strategy="epoch",
-    learning_rate=9e-5,
+    learning_rate=5e-5,
     fp16=False,
-    per_device_train_batch_size=4,
-    per_device_eval_batch_size=8,
+    weight_decay=0.01,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=6,
+    gradient_accumulation_steps=2,
     save_total_limit=2,
     num_train_epochs=10,
     predict_with_generate=True,
+    metric_for_best_model="bleu",
 )
 
 
@@ -115,10 +163,11 @@ trainer = Seq2SeqTrainer(
     train_dataset=train_dataset,
     eval_dataset=eval_dataset,
     tokenizer=tokenizer,
+    compute_metrics=compute_metrics,
 )
 
 project = "hackathon_cast"
 wandb.login()
-wandb.init(name="t5_v3", project=project, reinit=True)
+wandb.init(name="t5_v4", project=project, reinit=True)
 
 trainer.train()

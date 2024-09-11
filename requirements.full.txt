@@ -22,3 +22,9 @@ scikit-learn
 torch
 keybert
 langdetect
+wandb
+evaluate
+nltk
+absl-py
+rouge_score
+accelerate

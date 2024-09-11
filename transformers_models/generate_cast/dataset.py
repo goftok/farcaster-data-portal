@@ -32,7 +32,6 @@ def fetch_all_casts(conn):
     query = """
         SELECT DISTINCT text
         FROM casts
-        limit 10000
     """
 
     with conn.cursor() as cur:
@@ -57,6 +56,8 @@ def create_excel_with_casts_and_keywords(output_excel_file, conn):
     # Step 2: Generate keywords for each cast
     keywords_list = []
     clean_casts = []
+
+    print(f"Total number of casts to process: {len(casts)}")
     for idx, cast in enumerate(casts):
         if idx % 1000 == 0:
             print(f"Processing cast {idx + 1} of {len(casts)}")
@@ -68,8 +69,8 @@ def create_excel_with_casts_and_keywords(output_excel_file, conn):
             # Check if the language of the cast is English
             if detect(cast) != "en":
                 continue
-        except Exception as e:
-            print(f"Error detecting language: {e}")
+        except Exception:
+            # print(f"Error detecting language: {e}")
             continue
 
         keywords = extract_keywords(cast)  # Extract keywords for each cast
@@ -83,7 +84,7 @@ def create_excel_with_casts_and_keywords(output_excel_file, conn):
     clean_keywords = [clean_text(keywords) for keywords in keywords_list]
 
     # Step 3: Prepare data for the Excel file
-    data = {"Casts": clean_casts, "Keywords": clean_keywords}
+    data = {"Keywords": clean_keywords, "Casts": clean_casts}
 
     # Step 4: Convert the data to a pandas DataFrame
     df = pd.DataFrame(data)
@@ -91,6 +92,7 @@ def create_excel_with_casts_and_keywords(output_excel_file, conn):
     # Step 5: Write the DataFrame to an Excel file
     df.to_excel(output_excel_file, index=False)
 
+    print(f"Total number of casts processed: {len(clean_casts)}")
     print(f"Excel file '{output_excel_file}' created successfully.")
 
 
